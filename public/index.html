@@ -629,6 +629,55 @@
       background-color: var(--primary);
     }
 
+    /* ===== Contributors ===== */
+    .contributors-section {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--dark-bg);
+    }
+
+    .contributors-section .section-title {
+      margin-bottom: 2rem;
+    }
+
+    .contributor {
+      margin-bottom: 2rem;
+    }
+
+    .contributor-name {
+      font-family: var(--font-headline);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--body-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .contributor-bio {
+      font-size: 0.95rem;
+      color: var(--light-text);
+      line-height: 1.65;
+    }
+
+    .essay-author a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .essay-author a:hover {
+      border-bottom-color: var(--light-text);
+    }
+
+    /* ===== Footer ===== */
+    .site-footer {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--light-text);
+    }
+
     /* ===== PDF / Print Mode ===== */
     body.print-mode .download-btn,
     body.print-mode .about-btn,
@@ -783,6 +832,34 @@
       color: #000000 !important;
       border-top-color: #000000;
       border-bottom-color: #000000;
+    }
+
+    body.print-mode .contributors-section {
+      page-break-before: always;
+      border-top: none;
+    }
+
+    body.print-mode .contributor-name {
+      font-family: 'Times New Roman', 'Times', serif !important;
+      font-size: 12pt !important;
+      font-weight: bold;
+      color: #000000 !important;
+    }
+
+    body.print-mode .contributor-bio {
+      font-family: 'Times New Roman', 'Times', serif !important;
+      font-size: 11pt !important;
+      color: #000000 !important;
+    }
+
+    body.print-mode .site-footer {
+      display: none;
+    }
+
+    body.print-mode .essay-author a {
+      color: inherit !important;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
 
     /* ===== Highlight & Share Tooltip ===== */
@@ -961,6 +1038,7 @@
       <nav>
         <h2 class="toc-title">Contents</h2>
         <ul class="toc-list">
+          <li><a href="#top" class="toc-major">Top</a></li>
           <li><a href="#in-praise-of-being-inconvenient" class="toc-major">1. In Praise of Being Inconvenient</a></li>
           <li><a href="#forsaking-all-others" class="toc-major">2. Forsaking All Others</a></li>
           <li><a href="#why-i-dont-like-the-term-homeschool" class="toc-major">3. Why I Don&rsquo;t Like the Term &lsquo;Homeschool&rsquo;</a></li>
@@ -970,6 +1048,7 @@
           <li><a href="#redeeming-neverland" class="toc-major">7. Redeeming Neverland</a></li>
           <li><a href="#the-need-for-father-scholars" class="toc-major">8. The Need for Father-Scholars</a></li>
           <li><a href="#markets-and-the-strangulation" class="toc-major">9. Markets and the Strangulation of the American Family</a></li>
+          <li><a href="#contributors" class="toc-major">Contributors</a></li>
         </ul>
       </nav>
       <div class="sidebar-actions">
@@ -1014,9 +1093,9 @@
     <main class="main-content">
       <div class="content-container">
         <!-- Hero -->
-        <div class="hero">
+        <div id="top" class="hero">
           <h1 class="hero-title">Spiritual Formation for the Family</h1>
-          <p class="hero-date">2025</p>
+          <p class="hero-date">2026</p>
         </div>
 
         <!-- Article Content -->
@@ -1025,7 +1104,7 @@
           <!-- Chapter 1 -->
           <section id="in-praise-of-being-inconvenient" class="content-section">
             <h2 class="section-title">In Praise of Being Inconvenient</h2>
-            <p class="essay-author">By Nadya Williams</p>
+            <p class="essay-author">By <a href="#contributor-nadya-williams">Nadya Williams</a></p>
 
             <p>One recent night around 2:00 AM, my daughter's distressed voice, calling for me, jolted me out of deep sleep. Barely awake herself, she was looking for her stuffed doll (named Dolly, obviously), the one without which she cannot sleep, because without clutching it in a very precise way, she cannot suck her thumb. And without sucking her thumb, she cannot get back to sleep. This vicious cycle makes perfect sense in her six-year-old mind, even if it might not in yours. Thence the cry of alarm at 2:00 AM.</p>
 
@@ -1059,7 +1138,7 @@
           <!-- Chapter 2 -->
           <section id="forsaking-all-others" class="content-section">
             <h2 class="section-title">Forsaking All Others</h2>
-            <p class="essay-author">By Kirsten Sanders</p>
+            <p class="essay-author">By <a href="#contributor-kirsten-sanders">Kirsten Sanders</a></p>
 
             <blockquote><p>&ldquo;Purity of heart is to will one thing&rdquo;. &mdash; Soren Kierkegaard</p></blockquote>
 
@@ -1127,7 +1206,7 @@
           <!-- Chapter 3 -->
           <section id="why-i-dont-like-the-term-homeschool" class="content-section">
             <h2 class="section-title">Why I Don&rsquo;t Like the Term &lsquo;Homeschool&rsquo;</h2>
-            <p class="essay-author">By Tessa Carman</p>
+            <p class="essay-author">By <a href="#contributor-tessa-carman">Tessa Carman</a></p>
 
 <p>“Are we doing school today?” my son asked me. I looked at him curiously, because we don’t use the term “school” much at all in our home.</p>
 
@@ -1167,7 +1246,7 @@
           <!-- Chapter 4 -->
           <section id="teaching-children-to-see" class="content-section">
             <h2 class="section-title">Teaching Children to See</h2>
-            <p class="essay-author">By Kelly Givens</p>
+            <p class="essay-author">By <a href="#contributor-kelly-givens">Kelly Givens</a></p>
 
 <p>This past winter, my six-year-old began each day looking out the window. I would hear him roll out of bed, feet hit the floor, his footsteps moving toward one of the windows in his room. I knew what he was looking for: snow. A little while later he would come down the stairs, still sleepy-eyed, and ask to check the weather app on my phone. Would any of the icons in the 10-day forecast have changed from a sun to a snowflake overnight? For weeks, this was his first order of business. If there was a possibility of snow, he would be the first to report it.</p>
 
@@ -1207,7 +1286,7 @@
           <!-- Chapter 5 -->
           <section id="dignity-beyond-accomplishment" class="content-section">
             <h2 class="section-title">Dignity Beyond Accomplishment</h2>
-            <p class="essay-author">By Justin Hawkins</p>
+            <p class="essay-author">By <a href="#contributor-justin-hawkins">Justin Hawkins</a></p>
 
             <blockquote><p>&ldquo;The examination combines the techniques of an observing hierarchy and those of a normalizing judgment. It is a normalizing gaze, a surveillance that makes it possible to quantify, to classify, and to punish. It establishes over others a visibility through which one differentiates them and judges them.&rdquo; (Foucault, <em>Discipline and Punish</em>)</p></blockquote>
 
@@ -1310,7 +1389,7 @@
           <!-- Chapter 6 -->
           <section id="how-do-our-kids-stay-christian" class="content-section">
             <h2 class="section-title">How Do Our Kids Stay Christian?</h2>
-            <p class="essay-author">By Cameron Shaffer</p>
+            <p class="essay-author">By <a href="#contributor-cameron-shaffer">Cameron Shaffer</a></p>
 
 <p>How do our kids stay Christian? Some version of this question has animated both scholarly and pastoral discussion over the last several years, especially as the great dechurching marches on unabated. This is not merely an academic question, but one that has kept younger parents anxious as they watch more and more of their peers turn away from the faith.</p>
 
@@ -1397,7 +1476,7 @@
           <!-- Chapter 7 -->
           <section id="redeeming-neverland" class="content-section">
             <h2 class="section-title">Redeeming Neverland: The Question of Shame &amp; the Crisis of Agency Facing Modern Men</h2>
-            <p class="essay-author">By Brad Edwards</p>
+            <p class="essay-author">By <a href="#contributor-brad-edwards">Brad Edwards</a></p>
 
 <p>J. M. Barrie first wrote Peter Pan as a play in 1904, expanding it into a full novel in 1911. Nothing he wrote before or since would ever come close to sparking such popular reception. It tapped into and articulated the tension of a society in the throes of rapid social change and economic reordering. British Imperialism’s assumed stability shuddered in the face of America’s rise to power on the global stage. Though Britain was technically victorious, the South African War (1899-1902) offered Great Britain both a disturbing preview of WWI and a painful illustration of the consequences in being slow to adapt to rapid technological advancement. Combining the dated tactics of the muzzle-loading era with breach-loading rifles led only to carnage. A growing fear of national decline was palpable, with its attendant implications spreading through British society.</p>
 
@@ -1550,7 +1629,7 @@
           <!-- Chapter 8 -->
           <section id="the-need-for-father-scholars" class="content-section">
             <h2 class="section-title">The Need for Father-Scholars</h2>
-            <p class="essay-author">By Ian Harber</p>
+            <p class="essay-author">By <a href="#contributor-ian-harber">Ian Harber</a></p>
 
 <p>“It’s so boring.” This, apparently, is one of the main reasons Gen Z parents are not reading to their children. Only 41% of parents are reading to their children under five years old, down from 64% in 2012. While that’s the data we have and it’s specific to Gen Z, it isn’t a stretch to imagine that books on the whole have less of a place in young families than they did in the past.</p>
 
@@ -1687,7 +1766,7 @@
           <!-- Chapter 9 -->
           <section id="markets-and-the-strangulation" class="content-section">
             <h2 class="section-title">Markets and the Strangulation of the American Family</h2>
-            <p class="essay-author">By Gracy Olmstead</p>
+            <p class="essay-author">By <a href="#contributor-gracy-olmstead">Gracy Olmstead</a></p>
 
 <p>Maxine Eichner was a lawyer with a new baby girl. At work, she felt pressured to keep up with the long work hours of her peers, but in her heart, she longed to be home with her baby. One day, her every effort to get home in time for dinner was stymied. She sped home, hoping to at least see her daughter before bedtime&mdash;and was stopped by a police officer.</p>
 
@@ -1800,7 +1879,60 @@
             <p>Once again, there are a myriad of complex, important ways that we can re-value care work and caregivers in America. Finnish economic and government policy are by no means the only way we can achieve these things. But Quart and Eichner are both right to point to the complexity of our problem, as well as the ruthless capitalist logic often underlying it. They are right to consider the rigorous response this problem might demand of us. If we truly want to value life, we may have to reconsider many things: the companies we support, the taxes we’re willing to pay, and&mdash;more practically and personally&mdash;how we are supporting our co-workers, employees, neighbors, and family members. If the family matters to us as Americans, we need to start acting like it.</p>
           </section>
 
+          <!-- Contributors -->
+          <section id="contributors" class="content-section contributors-section">
+            <h2 class="section-title">Contributors</h2>
+
+            <div id="contributor-nadya-williams" class="contributor">
+              <p class="contributor-name">Nadya Williams</p>
+              <p class="contributor-bio">Nadya Williams is the Books Editor at Mere Orthodoxy. She holds a PhD in Classics from Princeton University and is the author of <em>Cultural Christians in the Early Church</em>; <em>Mothers, Children, and the Body Politic: Ancient Christianity and the Recovery of Human Dignity</em>; and <em>Christians Reading Classics</em> (forthcoming Zondervan Academic, 2025). She and her husband Dan joyfully live and homeschool in Ashland, Ohio.</p>
+            </div>
+
+            <div id="contributor-kirsten-sanders" class="contributor">
+              <p class="contributor-name">Kirsten Sanders</p>
+              <p class="contributor-bio">Kirsten Sanders (PhD, Emory University) is a writer and theologian. She lives with her family in Massachusetts.</p>
+            </div>
+
+            <div id="contributor-tessa-carman" class="contributor">
+              <p class="contributor-name">Tessa Carman</p>
+              <p class="contributor-bio">Tessa Carman writes from Mount Rainier, Maryland.</p>
+            </div>
+
+            <div id="contributor-kelly-givens" class="contributor">
+              <p class="contributor-name">Kelly Givens</p>
+            </div>
+
+            <div id="contributor-justin-hawkins" class="contributor">
+              <p class="contributor-name">Justin Hawkins</p>
+              <p class="contributor-bio">Justin R. Hawkins is a postdoctoral researcher in bioethics at Columbia University Irving Medical Center. He received his PhD with distinction from Yale University in 2024.</p>
+            </div>
+
+            <div id="contributor-cameron-shaffer" class="contributor">
+              <p class="contributor-name">Cameron Shaffer</p>
+              <p class="contributor-bio">Cameron Shaffer (PhD candidate, Vrije Universiteit Amsterdam) is the Senior Pastor of Langhorne Presbyterian Church in Langhorne, Pennsylvania, author of <em>Keeping Kids Christian</em>, and serves on the Board of Directors for the World Reformed Fellowship.</p>
+            </div>
+
+            <div id="contributor-brad-edwards" class="contributor">
+              <p class="contributor-name">Brad Edwards</p>
+              <p class="contributor-bio">Brad Edwards is the pastor of The Table Church in Boulder, CO and is the author of <em>The Reason For Church: Why the Body of Christ Still Matters in an Age of Anxiety, Division, and Radical Individualism</em>.</p>
+            </div>
+
+            <div id="contributor-ian-harber" class="contributor">
+              <p class="contributor-name">Ian Harber</p>
+              <p class="contributor-bio">Ian Harber is the Director of Communications and Marketing for Mere Orthodoxy. He is the author of the book, <em>Walking Through Deconstruction: How To Be A Companion In A Crisis Of Faith</em> (IVP &rsquo;25). He has written for The Gospel Coalition, Mere Orthodoxy, RELEVANT, and more. Ian lives in Denton, TX with his wife and two sons.</p>
+            </div>
+
+            <div id="contributor-gracy-olmstead" class="contributor">
+              <p class="contributor-name">Gracy Olmstead</p>
+              <p class="contributor-bio">Gracy Olmstead writes from her home state of Idaho. Her writings can also be found at The American Conservative, The Week, National Review, Christianity Today, and others.</p>
+            </div>
+          </section>
+
         </article>
+
+        <footer class="site-footer">
+          <p>&copy; 2026 Mere Orthodoxy</p>
+        </footer>
       </div>
     </main>
   </div>
