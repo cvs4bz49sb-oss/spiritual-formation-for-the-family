@@ -1,0 +1,12 @@
+{
+  "name": "spiritual-formation",
+  "version": "1.0.0",
+  "description": "Spiritual Formation for the Family — Mere Orthodoxy",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "puppeteer": "^24.2.0"
+  }
+}
