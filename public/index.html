@@ -135,10 +135,73 @@
       z-index: 10;
       display: flex;
       flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+      transform: translateX(-100%);
     }
 
     .sidebar nav {
       flex: 1;
+    }
+
+    /* ===== Sidebar Collapse Toggle (desktop) ===== */
+    .sidebar-collapse-btn {
+      position: fixed;
+      top: 50%;
+      left: var(--sidebar-width);
+      transform: translateY(-50%);
+      z-index: 11;
+      width: 20px;
+      height: 44px;
+      background-color: var(--dark-bg);
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: left 0.3s ease, background-color 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .sidebar-collapse-btn:hover {
+      opacity: 1;
+    }
+
+    .sidebar-collapse-btn svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--body-text);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.collapsed ~ .sidebar-collapse-btn,
+    .sidebar-collapse-btn.collapsed {
+      left: 0;
+    }
+
+    .sidebar-collapse-btn.collapsed svg {
+      transform: rotate(180deg);
+    }
+
+    [data-theme="dark"] .sidebar-collapse-btn {
+      background-color: var(--light-text);
+    }
+
+    /* Shift main content when sidebar collapses */
+    .main-content {
+      transition: margin-left 0.3s ease;
+    }
+
+    .main-content.sidebar-collapsed {
+      margin-left: 0;
     }
 
     .sidebar-actions {
@@ -575,6 +638,10 @@
         display: block;
       }
 
+      .sidebar-collapse-btn {
+        display: none;
+      }
+
       .menu-toggle {
         display: block;
       }
@@ -714,6 +781,7 @@
     body.print-mode .sidebar-actions,
     body.print-mode .top-bar,
     body.print-mode .sidebar,
+    body.print-mode .sidebar-collapse-btn,
     body.print-mode .sidebar-overlay,
     body.print-mode .progress-bar,
     body.print-mode .menu-toggle {
@@ -1118,6 +1186,11 @@
         </div>
       </div>
     </aside>
+
+    <!-- Sidebar Collapse Toggle (desktop) -->
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Toggle sidebar" title="Toggle sidebar">
+      <svg viewBox="0 0 12 12"><polyline points="8,2 4,6 8,10"/></svg>
+    </button>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -2001,14 +2074,56 @@
       html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     });
 
-    // Mobile menu
+    // Sidebar toggle
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
+    const collapseBtn = document.getElementById('sidebarCollapseBtn');
+    const mainContent = document.querySelector('.main-content');
 
+    // Desktop collapse/expand
+    function collapseSidebar() {
+      sidebar.classList.add('collapsed');
+      collapseBtn.classList.add('collapsed');
+      mainContent.classList.add('sidebar-collapsed');
+      menuToggle.style.display = 'block';
+      localStorage.setItem('sidebarCollapsed', 'true');
+    }
+
+    function expandSidebar() {
+      sidebar.classList.remove('collapsed');
+      collapseBtn.classList.remove('collapsed');
+      mainContent.classList.remove('sidebar-collapsed');
+      if (window.innerWidth > 960) {
+        menuToggle.style.display = 'none';
+      }
+      localStorage.setItem('sidebarCollapsed', 'false');
+    }
+
+    collapseBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('collapsed')) {
+        expandSidebar();
+      } else {
+        collapseSidebar();
+      }
+    });
+
+    // Restore saved state on desktop
+    if (window.innerWidth > 960 && localStorage.getItem('sidebarCollapsed') === 'true') {
+      collapseSidebar();
+    }
+
+    // Mobile menu (hamburger)
     menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('open');
+      if (window.innerWidth <= 960) {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      } else {
+        // On desktop, hamburger reopens collapsed sidebar
+        if (sidebar.classList.contains('collapsed')) {
+          expandSidebar();
+        }
+      }
     });
 
     overlay.addEventListener('click', () => {
