@@ -10,6 +10,9 @@ const PORT = process.env.PORT || 3000;
 const HUBSPOT_TOKEN = process.env.HUBSPOT_TOKEN;
 const HUBSPOT_LIST_ID = process.env.HUBSPOT_LIST_ID || "7195";
 
+// Bypass token for direct access links (set in Railway env vars)
+const BYPASS_TOKEN = process.env.BYPASS_TOKEN;
+
 // Session secret for signing cookies
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
@@ -269,6 +272,13 @@ app.get("*", (req, res) => {
 
   // Always serve full page for print mode (Puppeteer) from localhost
   if (isPrint && isLocal) {
+    return res.sendFile(path.join(__dirname, "public", "index.html"));
+  }
+
+  // Bypass token: grant access and set cookie so the token isn't needed again
+  if (BYPASS_TOKEN && req.query.access === BYPASS_TOKEN) {
+    const signed = signValue("bypass");
+    res.setHeader("Set-Cookie", `sf_access=${encodeURIComponent(signed)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`);
     return res.sendFile(path.join(__dirname, "public", "index.html"));
   }
 
