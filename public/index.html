@@ -620,6 +620,11 @@
       z-index: 5;
     }
 
+    /* Hidden on desktop, shown via media query on mobile */
+    .mobile-bottom-bar {
+      display: none;
+    }
+
     /* ===== Responsive ===== */
     @media (max-width: 960px) {
       .sidebar {
@@ -628,6 +633,7 @@
         background-color: var(--page-bg);
         z-index: 50;
         width: 280px;
+        padding-bottom: 1rem;
       }
 
       .sidebar.open {
@@ -642,13 +648,18 @@
         display: none;
       }
 
+      /* Hide sidebar-actions inside the sidebar on mobile */
+      .sidebar .sidebar-actions {
+        display: none;
+      }
+
       .menu-toggle {
         display: block;
       }
 
       .main-content {
         margin-left: 0;
-        padding: 5.5rem 1.5rem 4rem 1.5rem;
+        padding: 5.5rem 1.5rem 5rem 1.5rem;
       }
 
       .hero-title {
@@ -661,6 +672,50 @@
 
       .top-bar {
         padding: 1rem 1.5rem;
+      }
+
+      /* Mobile floating bottom bar */
+      .mobile-bottom-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 90;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        background: rgba(241, 224, 201, 0.65);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-top: 1px solid rgba(193, 178, 165, 0.3);
+      }
+
+      [data-theme="dark"] .mobile-bottom-bar {
+        background: rgba(45, 41, 39, 0.65);
+        border-top: 1px solid rgba(154, 135, 115, 0.2);
+      }
+
+      .mobile-bottom-bar .about-btn {
+        width: auto;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+        margin-bottom: 0;
+        border-radius: 20px;
+      }
+
+      .mobile-bottom-bar .share-btn,
+      .mobile-bottom-bar .download-btn {
+        width: 36px;
+        height: 36px;
+      }
+
+      .mobile-bottom-bar .share-popup {
+        bottom: calc(100% + 0.75rem);
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 
@@ -783,6 +838,7 @@
     body.print-mode .sidebar,
     body.print-mode .sidebar-collapse-btn,
     body.print-mode .sidebar-overlay,
+    body.print-mode .mobile-bottom-bar,
     body.print-mode .progress-bar,
     body.print-mode .menu-toggle {
       display: none !important;
@@ -1128,6 +1184,42 @@
 
   <!-- Sidebar Overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Mobile Bottom Bar -->
+  <div class="mobile-bottom-bar" id="mobileBottomBar">
+    <a href="https://mereorthodoxy.com/about" class="about-btn">About Mere Orthodoxy</a>
+    <div class="share-wrapper">
+      <div class="share-popup" id="mobileSharePopup">
+        <button class="share-option" id="mobileCopyLink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy link
+        </button>
+        <div class="share-copied" id="mobileCopiedMsg">Link copied!</div>
+        <a class="share-option" id="mobileShareSMS" href="#" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Text message
+        </a>
+        <a class="share-option" id="mobileShareX" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </a>
+        <a class="share-option" id="mobileShareFB" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Share on Facebook
+        </a>
+        <a class="share-option" id="mobileShareIG" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          Instagram Stories
+        </a>
+      </div>
+      <button class="share-btn" id="mobileShareToggle" title="Share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+    <a href="/api/pdf" class="download-btn" title="Download PDF">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9m0 0L4.5 7.5M8 11l3.5-3.5M2 13h12"/></svg>
+    </a>
+  </div>
 
   <div class="page-wrapper">
     <!-- Sidebar TOC -->
@@ -2228,6 +2320,54 @@
         setTimeout(() => { msg.classList.remove('show'); msg.textContent = 'Link copied!'; }, 4000);
       });
     });
+
+    // Mobile bottom bar share functionality
+    const mobileShareToggle = document.getElementById('mobileShareToggle');
+    const mobileSharePopup = document.getElementById('mobileSharePopup');
+
+    if (mobileShareToggle) {
+      mobileShareToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileSharePopup.classList.toggle('open');
+        // Close desktop popup if open
+        sharePopup.classList.remove('open');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (mobileSharePopup && !mobileSharePopup.contains(e.target) && e.target !== mobileShareToggle) {
+          mobileSharePopup.classList.remove('open');
+        }
+      });
+
+      document.getElementById('mobileCopyLink').addEventListener('click', () => {
+        navigator.clipboard.writeText(SHARE_URL).then(() => {
+          const msg = document.getElementById('mobileCopiedMsg');
+          msg.classList.add('show');
+          setTimeout(() => msg.classList.remove('show'), 2000);
+        });
+      });
+
+      document.getElementById('mobileShareSMS').href =
+        'sms:?&body=' + encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL);
+
+      document.getElementById('mobileShareX').href =
+        'https://x.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) +
+        '&url=' + encodeURIComponent(SHARE_URL);
+
+      document.getElementById('mobileShareFB').href =
+        'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SHARE_URL);
+
+      document.getElementById('mobileShareIG').addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(SHARE_URL).then(() => {
+          window.open('https://www.instagram.com/create/story/', '_blank');
+          const msg = document.getElementById('mobileCopiedMsg');
+          msg.textContent = 'Link copied! Paste it in your Story.';
+          msg.classList.add('show');
+          setTimeout(() => { msg.classList.remove('show'); msg.textContent = 'Link copied!'; }, 4000);
+        });
+      });
+    }
 
     // ===== Highlight & Share =====
     const hsTooltip = document.getElementById('highlightShare');
