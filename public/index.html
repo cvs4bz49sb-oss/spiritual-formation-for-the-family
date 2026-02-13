@@ -629,7 +629,6 @@
         background-color: var(--page-bg);
         z-index: 50;
         width: 280px;
-        padding-bottom: 1rem;
       }
 
       .sidebar.open {
@@ -642,29 +641,6 @@
 
       .sidebar-collapse-btn {
         display: none;
-      }
-
-      /* Fade out bottom of sidebar so it blends into browser chrome */
-      .sidebar::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 280px;
-        height: 80px;
-        background: linear-gradient(to bottom, transparent, var(--page-bg));
-        pointer-events: none;
-        z-index: 51;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-
-      .sidebar.open::after {
-        opacity: 1;
-      }
-
-      .sidebar-actions {
-        padding-bottom: 5rem;
       }
 
       .menu-toggle {
