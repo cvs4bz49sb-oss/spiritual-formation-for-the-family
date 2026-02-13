@@ -275,11 +275,11 @@ app.get("*", (req, res) => {
     return res.sendFile(path.join(__dirname, "public", "index.html"));
   }
 
-  // Bypass token: grant access and set cookie so the token isn't needed again
-  if (BYPASS_TOKEN && req.query.access === BYPASS_TOKEN) {
+  // Bypass token: e.g. /my-secret-token grants access and sets cookie
+  if (BYPASS_TOKEN && req.path === `/${BYPASS_TOKEN}`) {
     const signed = signValue("bypass");
     res.setHeader("Set-Cookie", `sf_access=${encodeURIComponent(signed)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`);
-    return res.sendFile(path.join(__dirname, "public", "index.html"));
+    return res.redirect("/");
   }
 
   // Check authentication
