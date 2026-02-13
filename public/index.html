@@ -195,14 +195,6 @@
       background-color: var(--light-text);
     }
 
-    /* Shift main content when sidebar collapses */
-    .main-content {
-      transition: margin-left 0.3s ease;
-    }
-
-    .main-content.sidebar-collapsed {
-      margin-left: 0;
-    }
 
     .sidebar-actions {
       margin-top: auto;
@@ -2080,13 +2072,11 @@
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     const collapseBtn = document.getElementById('sidebarCollapseBtn');
-    const mainContent = document.querySelector('.main-content');
 
     // Desktop collapse/expand
     function collapseSidebar() {
       sidebar.classList.add('collapsed');
       collapseBtn.classList.add('collapsed');
-      mainContent.classList.add('sidebar-collapsed');
       menuToggle.style.display = 'block';
       localStorage.setItem('sidebarCollapsed', 'true');
     }
@@ -2094,7 +2084,6 @@
     function expandSidebar() {
       sidebar.classList.remove('collapsed');
       collapseBtn.classList.remove('collapsed');
-      mainContent.classList.remove('sidebar-collapsed');
       if (window.innerWidth > 960) {
         menuToggle.style.display = 'none';
       }
