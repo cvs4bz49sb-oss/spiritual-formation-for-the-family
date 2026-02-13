@@ -2014,9 +2014,6 @@
     if (window.innerWidth > 960) {
       if (localStorage.getItem('sidebarCollapsed') === 'true') {
         sidebar.classList.add('collapsed');
-      } else {
-        // Sidebar visible — hide hamburger
-        menuToggle.style.display = 'none';
       }
     }
 
@@ -2030,11 +2027,9 @@
         // Desktop: toggle collapsed
         if (sidebar.classList.contains('collapsed')) {
           sidebar.classList.remove('collapsed');
-          menuToggle.style.display = 'none';
           localStorage.setItem('sidebarCollapsed', 'false');
         } else {
           sidebar.classList.add('collapsed');
-          menuToggle.style.display = 'block';
           localStorage.setItem('sidebarCollapsed', 'true');
         }
       }
