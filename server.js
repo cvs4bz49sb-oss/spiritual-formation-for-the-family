@@ -49,6 +49,9 @@ function isAuthenticated(req) {
 
 // --- HubSpot API helpers ---
 async function findContactByEmail(email) {
+  console.log(`[HubSpot] Searching for contact: ${email}`);
+  console.log(`[HubSpot] Token present: ${!!HUBSPOT_TOKEN}, Token length: ${HUBSPOT_TOKEN ? HUBSPOT_TOKEN.length : 0}`);
+
   const res = await fetch("https://api.hubapi.com/crm/v3/objects/contacts/search", {
     method: "POST",
     headers: {
@@ -67,12 +70,18 @@ async function findContactByEmail(email) {
       limit: 1,
     }),
   });
+
+  console.log(`[HubSpot] Contact search response status: ${res.status}`);
   const data = await res.json();
+  console.log(`[HubSpot] Contact search result:`, JSON.stringify(data).substring(0, 500));
+
   if (data.total > 0) return data.results[0];
   return null;
 }
 
 async function isContactInList(contactId) {
+  console.log(`[HubSpot] Checking list membership for contact ID: ${contactId}, List ID: ${HUBSPOT_LIST_ID}`);
+
   // Use HubSpot Lists v3 API to check membership
   const res = await fetch(
     `https://api.hubapi.com/crm/v3/lists/${HUBSPOT_LIST_ID}/memberships?limit=100`,
@@ -83,12 +92,17 @@ async function isContactInList(contactId) {
     }
   );
 
+  console.log(`[HubSpot] List membership response status: ${res.status}`);
+
   if (!res.ok) {
+    const errText = await res.text();
+    console.log(`[HubSpot] List v3 API error: ${errText}`);
     // Fallback: try the legacy v1 API
     return await isContactInListLegacy(contactId);
   }
 
   const data = await res.json();
+  console.log(`[HubSpot] List membership data:`, JSON.stringify(data).substring(0, 500));
 
   // Check if contact is in results
   const contactIdStr = String(contactId);
@@ -112,6 +126,8 @@ async function isContactInList(contactId) {
 }
 
 async function isContactInListLegacy(contactId) {
+  console.log(`[HubSpot] Trying legacy v1 API for list ${HUBSPOT_LIST_ID}`);
+
   // Legacy v1 API: check contact membership
   const res = await fetch(
     `https://api.hubapi.com/contacts/v1/lists/${HUBSPOT_LIST_ID}/contacts/all?count=100&property=email`,
@@ -122,7 +138,13 @@ async function isContactInListLegacy(contactId) {
     }
   );
 
-  if (!res.ok) return false;
+  console.log(`[HubSpot] Legacy API response status: ${res.status}`);
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.log(`[HubSpot] Legacy API error: ${errText}`);
+    return false;
+  }
 
   const data = await res.json();
   const contactIdStr = String(contactId);
