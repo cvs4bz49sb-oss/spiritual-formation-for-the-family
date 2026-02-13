@@ -259,11 +259,11 @@
     <h1 class="gate-title">Spiritual Formation<br>for the Family</h1>
     <p class="gate-subtitle">A Mere Orthodoxy Collection</p>
 
-    <p class="gate-instructions">Enter the email you subscribed with to access this ebook.</p>
+    <p class="gate-instructions">Enter the email you subscribed with to access this eBook.</p>
 
     <form class="gate-form" id="gateForm">
       <input type="email" class="gate-input" id="gateEmail" placeholder="your@email.com" required autocomplete="email" autofocus>
-      <button type="submit" class="gate-submit" id="gateSubmit">Access Ebook</button>
+      <button type="submit" class="gate-submit" id="gateSubmit">Access eBook</button>
     </form>
 
     <p class="gate-error" id="gateError"></p>
@@ -321,12 +321,12 @@
         } else {
           errorMsg.textContent = data.message || 'Access denied.';
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Access Ebook';
+          submitBtn.textContent = 'Access eBook';
         }
       } catch (err) {
         errorMsg.textContent = 'Something went wrong. Please try again.';
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Access Ebook';
+        submitBtn.textContent = 'Access eBook';
       }
     });
   </script>
