@@ -1,7 +1,10 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const crypto = require("crypto");
 const puppeteer = require("puppeteer");
+const cheerio = require("cheerio");
+const epub = require("epub-gen-memory").default;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -218,6 +221,126 @@ app.use((req, res, next) => {
 }, express.static(path.join(__dirname, "public"), {
   index: false, // Prevent auto-serving index.html at /
 }));
+
+// --- ePub content extraction ---
+const EPUB_CSS = `
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1em;
+  line-height: 1.75;
+  color: #2d2927;
+}
+h2, h3 {
+  font-family: Georgia, serif;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+h3 { font-size: 1.2em; margin-top: 1.2em; }
+p { margin-bottom: 0.8em; text-indent: 0; }
+blockquote {
+  margin: 1.2em 1.5em;
+  padding-left: 1em;
+  border-left: 3px solid #d89f5b;
+  font-style: italic;
+}
+ul, ol { margin: 1em 0; padding-left: 2em; }
+li { margin-bottom: 0.4em; }
+a { color: #c1593c; text-decoration: underline; }
+em { font-style: italic; }
+strong { font-weight: bold; }
+`;
+
+let cachedChapters = null;
+
+// No sub-sections to merge in this ebook — each section maps 1:1 to a TOC entry
+const MERGE_INTO = {};
+
+function getChapters() {
+  if (cachedChapters) return cachedChapters;
+
+  const html = fs.readFileSync(
+    path.join(__dirname, "public", "index.html"),
+    "utf-8"
+  );
+  const $ = cheerio.load(html);
+  const chapterMap = new Map();
+  const chapterOrder = [];
+
+  $("section.content-section").each((i, section) => {
+    const $section = $(section);
+    const rawTitle = $section.find("h2.section-title").first().text();
+    const $content = $section.clone();
+    $content.find("h2.section-title").first().remove();
+    $content.find("p.essay-author").remove();
+
+    const parentTitle = MERGE_INTO[rawTitle] || rawTitle;
+
+    if (chapterMap.has(parentTitle)) {
+      chapterMap.get(parentTitle).content +=
+        `<h2>${rawTitle}</h2>` + $content.html();
+    } else {
+      chapterMap.set(parentTitle, {
+        title: parentTitle,
+        content: $content.html(),
+      });
+      chapterOrder.push(parentTitle);
+    }
+  });
+
+  // Title page as first chapter
+  const titlePage = {
+    title: "",
+    excludeFromToc: true,
+    beforeToc: true,
+    content: `
+      <div style="text-align: center; margin-top: 40%; font-family: Georgia, serif;">
+        <p style="font-size: 0.85em; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 2em;">Mere Orthodoxy</p>
+        <h1 style="font-size: 2em; line-height: 1.3; margin-bottom: 0.5em;">Spiritual Formation for the Family</h1>
+        <p style="font-size: 1em; font-style: italic; color: #555; margin-bottom: 2em;">A Mere Orthodoxy Collection</p>
+      </div>
+    `,
+  };
+
+  cachedChapters = [titlePage, ...chapterOrder.map((t) => chapterMap.get(t))];
+  return cachedChapters;
+}
+
+// --- ePub endpoint (requires auth, or internal request) ---
+app.get("/api/epub", async (req, res) => {
+  const isInternal = req.hostname === "localhost" || req.hostname === "127.0.0.1";
+  if (!isInternal && !isAuthenticated(req)) {
+    return res.status(401).send("Access denied. Please verify your email first.");
+  }
+
+  try {
+    const chapters = getChapters();
+
+    const epubBuffer = await epub(
+      {
+        title: "Spiritual Formation for the Family",
+        author: "Mere Orthodoxy",
+        publisher: "Mere Orthodoxy",
+        description: "A Mere Orthodoxy Collection",
+        lang: "en",
+        css: EPUB_CSS,
+        tocTitle: "Contents",
+        version: 3,
+      },
+      chapters
+    );
+
+    res.set({
+      "Content-Type": "application/epub+zip",
+      "Content-Disposition":
+        'attachment; filename="spiritual-formation-for-the-family.epub"',
+      "Content-Length": epubBuffer.length,
+    });
+    res.end(epubBuffer);
+  } catch (err) {
+    console.error("EPUB generation error:", err);
+    res.status(500).send("Failed to generate EPUB");
+  }
+});
 
 // --- PDF endpoint (requires auth, or internal print request) ---
 app.get("/api/pdf", async (req, res) => {

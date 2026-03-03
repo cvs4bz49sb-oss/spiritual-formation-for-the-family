@@ -6,6 +6,8 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
+    "epub-gen-memory": "^1.1.2",
     "express": "^4.21.0",
     "puppeteer": "^24.2.0"
   }
