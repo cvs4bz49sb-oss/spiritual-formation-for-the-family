@@ -211,6 +211,52 @@ app.get("/api/logout", (req, res) => {
   res.redirect("/");
 });
 
+// --- Ghost token verification ---
+// Accepts a short-lived HMAC token minted by the mo-ebook-access
+// Cloudflare Worker alongside the existing HubSpot-list /api/verify
+// flow. Returns 501 when EBOOK_HMAC_SECRET isn't set — legacy gate
+// keeps working until the env var is added on Railway.
+const EBOOK_HMAC_SECRET = process.env.EBOOK_HMAC_SECRET;
+
+function b64urlDecodeToString(str) {
+  const padded = str.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((str.length + 3) % 4);
+  return Buffer.from(padded, "base64").toString("utf8");
+}
+
+function verifyGhostToken(token) {
+  if (!token || !EBOOK_HMAC_SECRET) return null;
+  const dot = token.indexOf(".");
+  if (dot < 0) return null;
+  const payload = token.slice(0, dot);
+  const sig = token.slice(dot + 1);
+  const expected = crypto
+    .createHmac("sha256", EBOOK_HMAC_SECRET)
+    .update(payload)
+    .digest("base64url");
+  if (sig !== expected) return null;
+  let claims;
+  try { claims = JSON.parse(b64urlDecodeToString(payload)); } catch { return null; }
+  if (!claims || typeof claims.email !== "string" || typeof claims.exp !== "number") return null;
+  if (claims.exp < Math.floor(Date.now() / 1000)) return null;
+  return claims;
+}
+
+app.get("/api/ghost-verify", (req, res) => {
+  if (!EBOOK_HMAC_SECRET) {
+    return res.status(501).send("Ghost verification not configured.");
+  }
+  const claims = verifyGhostToken(String(req.query.t || ""));
+  if (!claims) {
+    return res.status(401).send("Invalid or expired token.");
+  }
+  const signed = signValue(claims.email);
+  res.setHeader(
+    "Set-Cookie",
+    `sf_access=${encodeURIComponent(signed)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`,
+  );
+  res.redirect("/");
+});
+
 // --- Static files ---
 // Serve static files but block direct access to index.html (access control is handled by the catch-all route)
 app.use((req, res, next) => {
